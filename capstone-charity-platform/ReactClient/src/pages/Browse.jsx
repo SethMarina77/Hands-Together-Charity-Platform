@@ -5,10 +5,19 @@ import { toast } from "react-hot-toast"; // For error handling with toast
 const Browse = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [currentUserId, setCurrentUserId] = useState(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
       try {
+        const userResponse = await axios.get(
+          `${import.meta.env.VITE_BACKEND_URL}/me`,
+          {
+            withCredentials: true,
+          }
+        );
+        setCurrentUserId(userResponse.data._id);
+
         const response = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/browse`
         ); // Send a GET request to the backend to grab posts
@@ -85,15 +94,20 @@ const Browse = () => {
                 </p>
                 <p className="text-gray-500">{post.summary}</p>
 
-                <button
-                  onClick={() => {
-                    console.log("Delete button clicked for post ID:", post._id);
-                    handleDelete(post._id); // Call handleDelete after logging the post ID
-                  }}
-                  className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
-                >
-                  Delete
-                </button>
+                {currentUserId === post.createdBy?.toString() && (
+                  <button
+                    onClick={() => {
+                      console.log(
+                        "Delete button clicked for post ID:",
+                        post._id
+                      );
+                      handleDelete(post._id);
+                    }}
+                    className="mt-4 px-4 py-2 bg-red-600 text-white rounded hover:bg-red-700"
+                  >
+                    Delete
+                  </button>
+                )}
               </div>
             ))
           )}
