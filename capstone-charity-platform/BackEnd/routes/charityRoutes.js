@@ -45,7 +45,7 @@ router.post(
         category,
         summary,
         contact,
-        photo: imageUrl || "",
+        image: imageUrl || "",
         createdBy: req.user.id,
       });
 

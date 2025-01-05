@@ -1,11 +1,13 @@
 import { useEffect, useState } from "react";
 import axios from "axios";
-import { toast } from "react-hot-toast"; // For error handling with toast
+import { toast } from "react-hot-toast";
+import Modal from "./Modal";
 
 const Browse = () => {
   const [posts, setPosts] = useState([]);
   const [loading, setLoading] = useState(true);
   const [currentUserId, setCurrentUserId] = useState(null);
+  const [selectedPost, setSelectedPost] = useState(null);
 
   useEffect(() => {
     const fetchPosts = async () => {
@@ -20,7 +22,7 @@ const Browse = () => {
 
         const response = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/browse`
-        ); // Send a GET request to the backend to grab posts
+        );
         const updatedPosts = response.data.map((post) => ({
           ...post,
           image: post.image.startsWith("/uploads/")
@@ -30,9 +32,9 @@ const Browse = () => {
         setPosts(updatedPosts);
       } catch (error) {
         console.error("Error fetching posts:", error);
-        toast.error("Failed to load charity posts"); // Show an error with toast if something goes wrong
+        toast.error("Failed to load charity posts");
       } finally {
-        setLoading(false); // when the req is done the loading is stopped
+        setLoading(false);
       }
     };
 
@@ -42,7 +44,7 @@ const Browse = () => {
   const handleDelete = async (postId) => {
     try {
       const response = await axios.delete(
-        `${import.meta.env.VITE_BACKEND_URL}/${postId}`, // Removed 'charities' from the path
+        `${import.meta.env.VITE_BACKEND_URL}/${postId}`,
         { withCredentials: true }
       );
       if (response.status === 200) {
@@ -64,6 +66,14 @@ const Browse = () => {
     }
   };
 
+  const handlePostClick = (post) => {
+    setSelectedPost(post);
+  };
+
+  const handleCloseModal = () => {
+    setSelectedPost(null);
+  };
+
   return (
     <div className="container mx-auto p-4">
       <h2 className="text-2xl font-bold mb-4">Browse Charity Posts</h2>
@@ -77,7 +87,8 @@ const Browse = () => {
             posts.map((post) => (
               <div
                 key={post._id}
-                className="bg-white p-4 rounded-lg shadow-md transform hover:scale-110 hover:rotate-3 transition-transform duration-300 ease-in-out"
+                className="bg-white p-4 rounded-lg shadow-md transform hover:scale-110 hover:rotate-3 transition-transform duration-300 ease-in-out cursor-pointer"
+                onClick={() => handlePostClick(post)}
               >
                 {post.image ? (
                   <img
@@ -92,7 +103,6 @@ const Browse = () => {
                 <p className="text-gray-700 mb-2">
                   <strong>Category:</strong> {post.category}
                 </p>
-
                 <p className="text-gray-500 mb-2 h-16 overflow-hidden break-words">
                   {post.summary}
                 </p>
@@ -102,7 +112,8 @@ const Browse = () => {
 
                 {currentUserId === post.createdBy?.toString() && (
                   <button
-                    onClick={() => {
+                    onClick={(e) => {
+                      e.stopPropagation();
                       console.log(
                         "Delete button clicked for post ID:",
                         post._id
@@ -119,6 +130,30 @@ const Browse = () => {
           )}
         </div>
       )}
+
+      <Modal isOpen={selectedPost !== null} onClose={handleCloseModal}>
+        {selectedPost && (
+          <div className="space-y-4">
+            {selectedPost.image && (
+              <img
+                src={selectedPost.image}
+                alt={selectedPost.title}
+                className="w-full h-96 object-cover rounded-lg"
+              />
+            )}
+            <h2 className="text-2xl font-bold">{selectedPost.title}</h2>
+            <p className="text-lg">
+              <strong>Category:</strong> {selectedPost.category}
+            </p>
+            <p className="text-gray-700 whitespace-pre-wrap">
+              {selectedPost.summary}
+            </p>
+            <p className="text-lg">
+              <strong>Contact:</strong> {selectedPost.contact}
+            </p>
+          </div>
+        )}
+      </Modal>
     </div>
   );
 };
