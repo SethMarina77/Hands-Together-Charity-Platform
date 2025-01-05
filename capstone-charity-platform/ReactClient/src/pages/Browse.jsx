@@ -9,6 +9,12 @@ const Browse = () => {
   const [currentUserId, setCurrentUserId] = useState(null);
   const [selectedPost, setSelectedPost] = useState(null);
 
+  //checks if the contact is an email
+  const isEmail = (contact) =>
+    /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/.test(contact);
+  const isPhone = (contact) =>
+    /^[+]?[0-9]{1,4}[-\s]?[0-9]{1,3}[-\s]?[0-9]{4,10}$/.test(contact);
+
   useEffect(() => {
     const fetchPosts = async () => {
       try {
@@ -106,8 +112,9 @@ const Browse = () => {
                 <p className="text-gray-500 mb-2 h-16 overflow-hidden break-words">
                   {post.summary}
                 </p>
-                <p className="text-gray-700 mb-2">
-                  <strong>Contact:</strong> {post.contact}
+                <p className="mb-2">
+                  <strong>Contact:</strong>{" "}
+                  <span className="text-[#2563eb]">{post.contact}</span>
                 </p>
 
                 {currentUserId === post.createdBy?.toString() && (
@@ -148,8 +155,27 @@ const Browse = () => {
             <p className="text-gray-700 whitespace-pre-wrap">
               {selectedPost.summary}
             </p>
-            <p className="text-lg">
-              <strong>Contact:</strong> {selectedPost.contact}
+
+            {/* opens the users default email application on their device and starts an email they can send   */}
+            <p className="mb-2">
+              <strong>Contact:</strong>{" "}
+              {isEmail(selectedPost.contact) ? (
+                <a
+                  href={`mailto:${selectedPost.contact}`}
+                  className="text-[#2563eb]"
+                >
+                  {selectedPost.contact}
+                </a>
+              ) : isPhone(selectedPost.contact) ? (
+                <a
+                  href={`tel:${selectedPost.contact}`}
+                  className="text-[#2563eb]"
+                >
+                  {selectedPost.contact}
+                </a>
+              ) : (
+                selectedPost.contact
+              )}
             </p>
           </div>
         )}
