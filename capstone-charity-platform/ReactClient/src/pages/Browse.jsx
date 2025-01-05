@@ -92,7 +92,13 @@ const Browse = () => {
                 <p className="text-gray-700 mb-2">
                   <strong>Category:</strong> {post.category}
                 </p>
-                <p className="text-gray-500">{post.summary}</p>
+
+                <p className="text-gray-500 mb-2 h-16 overflow-hidden break-words">
+                  {post.summary}
+                </p>
+                <p className="text-gray-700 mb-2">
+                  <strong>Contact:</strong> {post.contact}
+                </p>
 
                 {currentUserId === post.createdBy?.toString() && (
                   <button

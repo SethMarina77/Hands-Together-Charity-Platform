@@ -9,6 +9,7 @@ const MakePost = () => {
   const [title, setTitle] = useState("");
   const [category, setCategory] = useState("");
   const [summary, setSummary] = useState("");
+  const [contact, setContact] = useState("");
   const [image, setImage] = useState(null); // For storing the uploaded image
 
   const handleImageChange = (e) => {
@@ -21,45 +22,46 @@ const MakePost = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    // Check if the fields are filled
-    if (!title || !category || !summary) {
+    // Check if any inputs are missing
+    if (!title || !category || !summary || !contact) {
       toast.error("All fields are required!");
       return;
     }
 
-    // Prepare form data to send to backend
+    // setup form to be sent back to the server
     const formData = new FormData();
     formData.append("title", title);
     formData.append("category", category);
     formData.append("summary", summary);
+    formData.append("contact", contact); // Add contact to formData
 
-    // Only append the image if there is one
+    // Only append the image if there is one I've set a default image in the backend
     if (image) {
       formData.append("image", image);
     }
 
     try {
-      // Send a POST request to the backend with form data
-      const response = await axios.post("/upload-post-image", formData, {
-        headers: {
-          Authorization: `Bearer ${localStorage.getItem("token")}`, // If authentication is required
-          "Content-Type": "multipart/form-data", // Important to set for file uploads
-        },
-      });
+      const response = await axios.post(
+        `${import.meta.env.VITE_BACKEND_URL}/create`,
+        formData,
+        {
+          withCredentials: true, // For cookies
+          headers: {
+            "Content-Type": "multipart/form-data",
+          },
+        }
+      );
 
       // Success handling
       toast.success("Post created successfully!");
-      navigate("/browse"); // Go to the browse page after successful post creation
+      navigate("/browse");
     } catch (error) {
       console.error("Error posting charity:", error);
-
-      // Handle error from the backend
       const errorMessage =
         error.response?.data?.message || "Error creating charity post";
-      toast.error(errorMessage); // Show error message using toast
+      toast.error(errorMessage);
     }
   };
-
 
   return (
     <div className="h-screen container mx-auto mt-8 mb-8 p-6 bg-gray-50 rounded-lg shadow-lg w-1/2">
@@ -116,7 +118,29 @@ const MakePost = () => {
             id="summary"
             value={summary}
             onChange={(e) => setSummary(e.target.value)}
+            maxLength={250} // Set max length to 250 charz
             required
+            className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
+          />
+          <p className="text-sm text-gray-600 mt-1">
+            {summary.length}/250 characters
+          </p>
+        </div>
+
+        <div>
+          <label
+            htmlFor="contact"
+            className="block text-lg font-medium text-gray-700 mb-2"
+          >
+            Contact Information
+          </label>
+          <input
+            type="text"
+            id="contact"
+            value={contact}
+            onChange={(e) => setContact(e.target.value)}
+            required
+            placeholder="Email or phone number"
             className="w-full p-3 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-500 focus:border-teal-500"
           />
         </div>
