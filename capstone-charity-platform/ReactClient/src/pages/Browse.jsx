@@ -16,16 +16,21 @@ const Browse = () => {
     /^[+]?[0-9]{1,4}[-\s]?[0-9]{1,3}[-\s]?[0-9]{4,10}$/.test(contact);
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchUser = async () => {
       try {
         const userResponse = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/me`,
-          {
-            withCredentials: true,
-          }
+          { withCredentials: true }
         );
         setCurrentUserId(userResponse.data._id);
+      } catch (error) {
+        console.warn("User not logged in or failed to fetch user data.");
+        setCurrentUserId(null); // Ensure state is still updated
+      }
+    };
 
+    const fetchPosts = async () => {
+      try {
         const response = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/browse`
         );
@@ -44,6 +49,7 @@ const Browse = () => {
       }
     };
 
+    fetchUser();
     fetchPosts();
   }, []);
 

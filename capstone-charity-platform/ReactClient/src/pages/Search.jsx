@@ -16,7 +16,7 @@ const Browse = ({ category }) => {
     /^[+]?[0-9]{1,4}[-\s]?[0-9]{1,3}[-\s]?[0-9]{4,10}$/.test(contact);
 
   useEffect(() => {
-    const fetchPosts = async () => {
+    const fetchUser = async () => {
       try {
         const userResponse = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/me`,
@@ -25,7 +25,14 @@ const Browse = ({ category }) => {
           }
         );
         setCurrentUserId(userResponse.data._id);
+      } catch (error) {
+        console.error("Error fetching user:", error);
+        //toast.error("Failed to load user data"); commented for now because it shows when a user is not logged in
+      }
+    };
 
+    const fetchPosts = async () => {
+      try {
         const response = await axios.get(
           `${import.meta.env.VITE_BACKEND_URL}/browse`
         );
@@ -36,7 +43,7 @@ const Browse = ({ category }) => {
             : post.image,
         }));
 
-        // Filter posts by categoryy
+        // Filter posts by category
         const filteredPosts = category
           ? updatedPosts.filter((post) => post.category === category)
           : updatedPosts;
@@ -50,6 +57,7 @@ const Browse = ({ category }) => {
       }
     };
 
+    fetchUser();
     fetchPosts();
   }, [category]);
 
@@ -88,7 +96,6 @@ const Browse = ({ category }) => {
 
   return (
     <div className="container mx-auto p-4">
-      
       {loading ? (
         <p>Loading posts...</p>
       ) : (
@@ -212,6 +219,5 @@ const Search = () => {
     </div>
   );
 };
-
 
 export default Search;
