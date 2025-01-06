@@ -199,7 +199,7 @@ const Search = () => {
           <select
             value={selectedCategory}
             onChange={(e) => setSelectedCategory(e.target.value)}
-            className="border-2 border-gray-300 rounded-lg px-4 py-2 bg-white text-gray-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent transition"
+            className="border-2 border-gray-300 rounded-lg px-4 py-2 bg-white text-gray-700 focus:outline-none focus:ring-4 focus:ring-green-500 focus:border-transparent transition"
           >
             <option value="Health">Health</option>
             <option value="Food">Food</option>

@@ -96,6 +96,18 @@ const Header = () => {
                       </button>
                     </NavLink>
                   )}
+
+                  {user.accountType === "admin" && (
+                    <NavLink
+                      to="/admin-dashboard"
+                      className="hover:text-teal-600"
+                    >
+                      <button className="rounded-md bg-red-800 px-5 py-2.5 text-sm font-medium text-white hover:bg-red-900">
+                        Admin
+                      </button>
+                    </NavLink>
+                  )}
+
                   <button
                     onClick={handleLogout}
                     className="rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-teal-700"

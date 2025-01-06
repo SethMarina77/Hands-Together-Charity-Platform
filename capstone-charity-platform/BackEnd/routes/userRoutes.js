@@ -36,5 +36,19 @@ router.post('/users', async (req, res) => {
   }
 });
 
+//lets you delete a user on an admin account
+router.delete("/users/:id", async (req, res) => {
+  try {
+    const result = await User.findByIdAndDelete(req.params.id);
+    if (!result) {
+      return res.status(404).json({ message: "User not found" });
+    }
+    res.json({ message: "User deleted successfully" });
+  } catch (err) {
+    res.status(500).json({ message: "Error deleting user", error: err });
+  }
+});
+
+
 
 export default router;

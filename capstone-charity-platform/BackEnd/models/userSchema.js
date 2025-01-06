@@ -20,7 +20,7 @@ const userSchema = new mongoose.Schema({
   },
   accountType: { 
     type: String,
-    enum: ['user', 'charity'], //remember that enum makes it so that they can only be one or the other nothing else
+    enum: ['user', 'charity', 'admin'], //remember that enum makes it so that they can only be one or the other nothing else
     required: true, 
   },
   profileImage: {

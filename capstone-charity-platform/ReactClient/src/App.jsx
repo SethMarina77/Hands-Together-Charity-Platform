@@ -18,6 +18,9 @@ import HowItWorks from "./pages/HowItWorks";
 import PrivacyPolicy from "./pages/PrivacyPolicy";
 import TermsOfService from "./pages/TermsOfService";
 import MakePost from "./pages/MakePost";
+import Admin from "./pages/admin-dashboard";
+
+
 
 axios.defaults.baseURL = "http://localhost:3000";
 axios.defaults.withCredentials = true;
@@ -51,6 +54,7 @@ const router = createBrowserRouter([
       { path: "/terms-of-service", element: <TermsOfService /> },
       { path: "/profile", element: <Profile /> },
       { path: "/make-post", element: <MakePost /> },
+      { path: "/admin-dashboard", element: <Admin /> },
     ],
   },
 ]);
