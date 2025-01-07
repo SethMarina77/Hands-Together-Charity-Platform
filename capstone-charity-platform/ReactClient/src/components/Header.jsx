@@ -82,9 +82,11 @@ const Header = () => {
                     {user.firstName.charAt(0).toUpperCase() +
                       user.firstName.slice(1)}
                   </span>
-                  <NavLink to="/profile" className="hover:text-teal-600">
-                    <button className="rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-teal-700">
-                      Profile
+                  <NavLink to="/profile" >
+                    <button className="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-teal-400 to-teal-600 group-hover:from-teal-500 group-hover:to-teal-700 dark:text-white dark:hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800">
+                      <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                        Profile
+                      </span>
                     </button>
                   </NavLink>
                   {user.accountType === "charity" && (
@@ -110,9 +112,11 @@ const Header = () => {
 
                   <button
                     onClick={handleLogout}
-                    className="rounded-md bg-teal-600 px-5 py-2.5 text-sm font-medium text-white hover:bg-teal-700"
+                    className="relative inline-flex items-center justify-center p-0.5 overflow-hidden text-sm font-medium text-gray-900 rounded-lg group bg-gradient-to-br from-teal-400 to-teal-600 group-hover:from-teal-500 group-hover:to-teal-700 dark:text-white dark:hover:text-gray-900 focus:ring-4 focus:outline-none focus:ring-teal-300 dark:focus:ring-teal-800"
                   >
-                    Logout
+                    <span className="relative px-5 py-2.5 transition-all ease-in duration-75 bg-white dark:bg-gray-900 rounded-md group-hover:bg-opacity-0">
+                      Logout
+                    </span>
                   </button>
                 </>
               ) : (
